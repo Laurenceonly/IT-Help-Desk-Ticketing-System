@@ -84,3 +84,25 @@ test('notes keep author and date, and filters and dashboard reflect tickets', ()
   assert.equal(dashboardCounts(tickets).Open, 2);
   assert.equal(dashboardCounts(tickets).unassignedOpen, 1);
 });
+
+test('domain validation rejects oversized text and invalid dates', () => {
+  const storage = memoryStorage();
+  assert.throws(() => makeTicket(storage, { requester: 'x'.repeat(101) }), /100 characters or fewer/);
+  assert.throws(() => makeTicket(storage, { description: 'x'.repeat(2001) }), /2000 characters or fewer/);
+  assert.throws(() => createTicket({}, storage), /requester name/);
+  assert.throws(() => makeTicket(storage, {}, 'not-a-date'), /Creation date is invalid/);
+
+  const ticket = makeTicket(storage);
+  assert.throws(() => addNote(ticket.id, { author: 'Alex', text: 'x'.repeat(2001) }, storage), /2000 characters or fewer/);
+  assert.throws(() => addNote(ticket.id, { author: 'Alex', text: 'Update' }, storage, new Date('invalid')), /Note date is invalid/);
+  assert.equal(getResolutionDays('2026-10-03T00:00:00.000Z', '2026-10-02T00:00:00.000Z'), null);
+});
+
+test('damaged or unavailable storage produces a useful error', () => {
+  const malformed = memoryStorage();
+  malformed.setItem('campus-it-tickets-v1', JSON.stringify([{ id: 'TKT-0001' }]));
+  assert.throws(() => getTickets(malformed), /Stored ticket data is invalid/);
+
+  const unavailable = { getItem() { throw new Error('denied'); } };
+  assert.throws(() => getTickets(unavailable), /Check browser storage settings/);
+});

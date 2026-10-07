@@ -22,5 +22,5 @@ export function nextStatuses(currentStatus) { return transitions[currentStatus] 
 export function getResolutionDays(dateCreated, dateResolved) {
   if (!dateResolved) return null;
   const elapsed = new Date(dateResolved) - new Date(dateCreated);
-  return Number.isFinite(elapsed) ? Math.max(0, Math.ceil(elapsed / 86400000)) : null;
+  return Number.isFinite(elapsed) && elapsed >= 0 ? Math.ceil(elapsed / 86400000) : null;
 }

@@ -33,10 +33,13 @@ export function ticketLink(ticket) {
 export function message(node, text, error = false) {
   node.textContent = text;
   node.classList.toggle('is-error', error);
+  node.setAttribute('role', error ? 'alert' : 'status');
+  node.setAttribute('aria-live', error ? 'assertive' : 'polite');
   node.hidden = false;
 }
 
 export function clearMessage(node) {
   node.textContent = '';
+  node.removeAttribute('aria-live');
   node.hidden = true;
 }

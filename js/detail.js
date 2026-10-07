@@ -77,6 +77,7 @@ assignmentForm.addEventListener('submit', event => {
   const feedback = document.querySelector('#assignment-message');
   try {
     assignTechnician(id, new FormData(assignmentForm).get('technician'));
+    clearMessage(document.querySelector('#status-message'));
     message(feedback, 'Technician assignment saved.');
     render();
   } catch (error) { message(feedback, error.message, true); }
@@ -104,3 +105,4 @@ noteForm.addEventListener('submit', event => {
 });
 
 render();
+window.addEventListener('storage', render);

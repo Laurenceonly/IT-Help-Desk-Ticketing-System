@@ -7,6 +7,8 @@ try {
   for (const [name, count] of Object.entries(counts)) {
     document.querySelector(`[data-count="${name}"]`).textContent = count;
   }
+  document.querySelector('#attention-heading').lastChild.textContent =
+    ` open ticket${counts.unassignedOpen === 1 ? '' : 's'} need${counts.unassignedOpen === 1 ? 's' : ''} an owner`;
   document.querySelector('#attention-panel').hidden = counts.unassignedOpen === 0;
   const recent = document.querySelector('#recent-tickets');
   const latest = selectTickets(tickets).slice(0, 5);
@@ -26,3 +28,5 @@ try {
 } catch (error) {
   message(document.querySelector('#page-error'), error.message, true);
 }
+
+window.addEventListener('storage', () => location.reload());

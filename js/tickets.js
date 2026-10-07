@@ -55,3 +55,4 @@ form.addEventListener('submit', event => {
   } catch (error) { message(feedback, error.message, true); }
 });
 render();
+window.addEventListener('storage', render);

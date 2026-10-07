@@ -4,10 +4,12 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Dashboard · Campus IT Desk</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="css/style.css">
   <script type="module" src="js/dashboard.js"></script>
 </head>
 <body>
+  <a class="skip-link" href="#main-content">Skip to main content</a>
   <div class="app-shell">
     <aside class="sidebar">
       <a class="brand" href="index.html"><span class="brand-mark" aria-hidden="true">IT</span><span>Campus IT<br><strong>Service desk</strong></span></a>
@@ -17,7 +19,7 @@
       </nav>
       <div class="sidebar-bottom"><span class="sidebar-rule"></span><p>One place for campus technology requests.</p><small>Saved in this browser</small></div>
     </aside>
-    <main class="main-content">
+    <main class="main-content" id="main-content">
       <header class="topbar"><span>Campus support overview</span><span class="preview-tag">Campus IT desk</span></header>
       <div class="page-content">
         <div class="page-heading"><div><p class="eyebrow">Campus support</p><h1>Dashboard</h1><p class="intro">A quick view of requests and the work waiting for the IT team.</p></div><a class="button button-primary" href="tickets.html#new-ticket">New ticket <span aria-hidden="true">+</span></a></div>
@@ -34,7 +36,7 @@
         <section class="attention-panel" id="attention-panel" aria-labelledby="attention-heading"><div class="attention-icon" aria-hidden="true">!</div><div><h2 id="attention-heading"><span data-count="unassignedOpen">0</span> open tickets need an owner</h2><p>Assign a technician before work can move to In Progress.</p></div><a href="tickets.html?status=Open&technician=unassigned">Review tickets <span aria-hidden="true">→</span></a></section>
         <section aria-labelledby="recent-heading">
           <div class="section-heading"><h2 id="recent-heading">Recent tickets</h2><a href="tickets.html">Ticket list <span aria-hidden="true">→</span></a></div>
-          <div class="table-wrap"><table><thead><tr><th>Ticket</th><th>Category</th><th>Priority</th><th>Status</th><th>Technician</th></tr></thead><tbody id="recent-tickets"></tbody></table><p class="empty-state" id="recent-empty" hidden>No tickets yet. <a href="tickets.html#new-ticket">Create the first ticket</a> to start tracking requests.</p></div>
+          <div class="table-wrap"><table><caption class="visually-hidden">Five most recently created tickets</caption><thead><tr><th scope="col">Ticket</th><th scope="col">Category</th><th scope="col">Priority</th><th scope="col">Status</th><th scope="col">Technician</th></tr></thead><tbody id="recent-tickets"></tbody></table><p class="empty-state" id="recent-empty" hidden>No tickets yet. <a href="tickets.html#new-ticket">Create the first ticket</a> to start tracking requests.</p></div>
         </section>
       </div>
     </main>

@@ -6,14 +6,51 @@ export const TECHNICIANS = ['Alex Rivera', 'Jordan Lee', 'Sam Torres'];
 
 const TICKETS_KEY = 'campus-it-tickets-v1';
 const COUNTER_KEY = 'campus-it-ticket-counter-v1';
+const MAX_NAME_LENGTH = 100;
+const MAX_TEXT_LENGTH = 2000;
+
+function readStorage(storage, key) {
+  try {
+    return storage.getItem(key);
+  } catch {
+    throw new Error('Tickets could not be loaded. Check browser storage settings.');
+  }
+}
+
+function isValidDateString(value) {
+  return typeof value === 'string' && Number.isFinite(Date.parse(value));
+}
+
+function isStoredNote(note) {
+  return note && typeof note === 'object' &&
+    typeof note.text === 'string' &&
+    typeof note.author === 'string' &&
+    isValidDateString(note.date);
+}
+
+function isStoredTicket(ticket) {
+  return ticket && typeof ticket === 'object' &&
+    /^TKT-\d+$/.test(ticket.id) &&
+    typeof ticket.requester === 'string' &&
+    CATEGORIES.includes(ticket.category) &&
+    typeof ticket.description === 'string' &&
+    PRIORITIES.includes(ticket.priority) &&
+    STATUSES.includes(ticket.status) &&
+    (ticket.technician === '' || TECHNICIANS.includes(ticket.technician)) &&
+    isValidDateString(ticket.dateCreated) &&
+    (ticket.dateResolved === null || isValidDateString(ticket.dateResolved)) &&
+    Array.isArray(ticket.notes) && ticket.notes.every(isStoredNote);
+}
 
 export function getTickets(storage = localStorage) {
-  const raw = storage.getItem(TICKETS_KEY);
+  const raw = readStorage(storage, TICKETS_KEY);
   if (!raw) return [];
   let tickets;
   try { tickets = JSON.parse(raw); }
   catch { throw new Error('Stored tickets could not be read. Browser data may be damaged.'); }
-  if (!Array.isArray(tickets)) throw new Error('Stored tickets are invalid.');
+  if (!Array.isArray(tickets) || !tickets.every(isStoredTicket)) {
+    throw new Error('Stored ticket data is invalid. Clear this site’s browser storage to start again.');
+  }
   return tickets;
 }
 
@@ -26,15 +63,22 @@ function saveTickets(tickets, storage) {
   catch { throw new Error('Ticket could not be saved. Check browser storage settings or available space.'); }
 }
 
-function required(value, label) {
+function required(value, label, maxLength) {
   const result = String(value ?? '').trim();
   if (!result) throw new Error(`Enter ${label}.`);
+  if (result.length > maxLength) throw new Error(`${label[0].toUpperCase()}${label.slice(1)} must be ${maxLength} characters or fewer.`);
   return result;
 }
 
-export function createTicket(input, storage = localStorage, now = new Date()) {
-  const requester = required(input.requester, 'a requester name');
-  const description = required(input.description, 'a description');
+function toIsoString(value, label) {
+  const date = value instanceof Date ? value : new Date(value);
+  if (Number.isNaN(date.getTime())) throw new Error(`${label} is invalid.`);
+  return date.toISOString();
+}
+
+export function createTicket(input = {}, storage = localStorage, now = new Date()) {
+  const requester = required(input.requester, 'a requester name', MAX_NAME_LENGTH);
+  const description = required(input.description, 'a description', MAX_TEXT_LENGTH);
   if (!CATEGORIES.includes(input.category)) throw new Error('Choose a valid category.');
   if (!PRIORITIES.includes(input.priority)) throw new Error('Choose a valid priority.');
   const technician = input.technician || '';
@@ -45,15 +89,19 @@ export function createTicket(input, storage = localStorage, now = new Date()) {
     const match = String(ticket.id || '').match(/^TKT-(\d+)$/);
     return match ? Math.max(highest, Number(match[1])) : highest;
   }, 0);
-  const counter = Number(storage.getItem(COUNTER_KEY));
+  const counter = Number(readStorage(storage, COUNTER_KEY));
   const number = Math.max(Number.isSafeInteger(counter) && counter > 0 ? counter : 1, highestStored + 1);
   const ticket = {
     id: `TKT-${String(number).padStart(4, '0')}`, requester,
     category: input.category, description, priority: input.priority,
-    status: 'Open', technician, dateCreated: now.toISOString(), dateResolved: null, notes: []
+    status: 'Open', technician, dateCreated: toIsoString(now, 'Creation date'), dateResolved: null, notes: []
   };
   saveTickets([ticket, ...tickets], storage);
-  storage.setItem(COUNTER_KEY, String(number + 1));
+  try {
+    storage.setItem(COUNTER_KEY, String(number + 1));
+  } catch {
+    // Ticket IDs also use the highest stored ID, so the counter is only an optimization.
+  }
   return ticket;
 }
 
@@ -68,8 +116,9 @@ function updateTicket(id, transform, storage) {
 }
 
 export function assignTechnician(id, technician, storage = localStorage) {
-  if (technician && !TECHNICIANS.includes(technician)) throw new Error('Choose a valid technician.');
-  return updateTicket(id, ticket => ({ ...ticket, technician }), storage);
+  const assignment = String(technician ?? '').trim();
+  if (assignment && !TECHNICIANS.includes(assignment)) throw new Error('Choose a valid technician.');
+  return updateTicket(id, ticket => ({ ...ticket, technician: assignment }), storage);
 }
 
 export function changeStatus(id, newStatus, storage = localStorage, now = new Date()) {
@@ -79,18 +128,18 @@ export function changeStatus(id, newStatus, storage = localStorage, now = new Da
     return {
       ...ticket,
       status: newStatus,
-      dateResolved: newStatus === 'Resolved' ? now.toISOString()
+      dateResolved: newStatus === 'Resolved' ? toIsoString(now, 'Resolution date')
         : newStatus === 'In Progress' ? null : ticket.dateResolved
     };
   }, storage);
 }
 
-export function addNote(id, input, storage = localStorage, now = new Date()) {
-  const text = required(input.text, 'a note');
-  const author = required(input.author, 'your name');
+export function addNote(id, input = {}, storage = localStorage, now = new Date()) {
+  const text = required(input.text, 'a note', MAX_TEXT_LENGTH);
+  const author = required(input.author, 'your name', MAX_NAME_LENGTH);
   return updateTicket(id, ticket => ({
     ...ticket,
-    notes: [{ text, author, date: now.toISOString() }, ...(ticket.notes || [])]
+    notes: [{ text, author, date: toIsoString(now, 'Note date') }, ...(ticket.notes || [])]
   }), storage);
 }
 
