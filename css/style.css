@@ -100,7 +100,6 @@ a { color: inherit; }
 }
 .main-nav a:hover { background: #1b3a58; color: #fff; }
 .main-nav a.active { background: #e0efff; color: #123a5c; }
-.sidebar-bottom { margin: auto 11px 0; color: #a9bed3; font-size: 12px; }
 
 .main-content { min-width: 0; }
 .page-content { width: min(100%, 1432px); margin: 0 auto; padding: 52px clamp(28px, 5vw, 72px) 88px; }
@@ -286,7 +285,6 @@ tbody tr:hover { background: #f8fbff; }
   .brand { padding: 0; margin-inline-end: auto; }
   .main-nav { display: flex; gap: 4px; margin: 0; }
   .main-nav a { min-height: 42px; padding: 9px 12px; font-size: 13px; }
-  .sidebar-bottom { display: none; }
   .page-content { padding: 36px 24px 70px; }
   .page-heading { margin-bottom: 30px; }
   .filter-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
