@@ -43,3 +43,20 @@ export function clearMessage(node) {
   node.removeAttribute('aria-live');
   node.hidden = true;
 }
+
+export function connectDialog(dialog, openers) {
+  const open = () => {
+    if (!dialog.open) {
+      dialog.showModal();
+      dialog.querySelector('.dialog-heading h2')?.focus({ preventScroll: true });
+    }
+  };
+  for (const opener of openers) opener.addEventListener('click', open);
+  dialog.querySelectorAll('[data-close-dialog]').forEach(button => {
+    button.addEventListener('click', () => dialog.close());
+  });
+  dialog.addEventListener('click', event => {
+    if (event.target === dialog) dialog.close();
+  });
+  return open;
+}

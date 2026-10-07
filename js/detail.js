@@ -1,6 +1,6 @@
 import { addNote, assignTechnician, changeStatus, getTicket } from './store.js';
 import { getResolutionDays, nextStatuses, STATUSES } from './status.js';
-import { clearMessage, element, formatDate, message, statusLabel } from './ui.js';
+import { clearMessage, connectDialog, element, formatDate, message, statusLabel } from './ui.js';
 
 const id = new URLSearchParams(location.search).get('id');
 const content = document.querySelector('#ticket-content');
@@ -9,6 +9,8 @@ const pageError = document.querySelector('#page-error');
 const assignmentForm = document.querySelector('#assignment-form');
 const statusForm = document.querySelector('#status-form');
 const noteForm = document.querySelector('#note-form');
+const noteDialog = document.querySelector('#note-dialog');
+connectDialog(noteDialog, [document.querySelector('#open-note-dialog')]);
 
 function put(selector, text) { document.querySelector(selector).textContent = text; }
 
@@ -21,15 +23,11 @@ function render() {
     if (!ticket) return;
 
     document.title = `${ticket.id} · Campus IT Desk`;
-    put('#ticket-id', ticket.id);
-    put('#ticket-title', ticket.description);
+    put('#ticket-title', `Ticket ${ticket.id}`);
     put('#ticket-requester-summary', ticket.requester);
     put('#ticket-created-summary', formatDate(ticket.dateCreated));
     put('#ticket-description', ticket.description);
-    put('#detail-id', ticket.id);
-    put('#detail-requester', ticket.requester);
     put('#detail-category', ticket.category);
-    put('#detail-created', formatDate(ticket.dateCreated));
     put('#detail-resolved', formatDate(ticket.dateResolved));
     put('#detail-technician', ticket.technician || 'Unassigned');
     const days = getResolutionDays(ticket.dateCreated, ticket.dateResolved);
@@ -99,7 +97,9 @@ noteForm.addEventListener('submit', event => {
   try {
     addNote(id, Object.fromEntries(new FormData(noteForm)));
     noteForm.reset();
-    message(feedback, 'Note added.');
+    clearMessage(feedback);
+    noteDialog.close();
+    message(document.querySelector('#note-success'), 'Note added.');
     render();
   } catch (error) { message(feedback, error.message, true); }
 });

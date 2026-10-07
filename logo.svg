@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" role="img" aria-labelledby="title">
+  <title id="title">Campus IT</title>
+  <rect width="48" height="48" rx="13" fill="#e0efff"/>
+  <path d="M32 14.5a13 13 0 1 0 0 19" fill="none" stroke="#153b5e" stroke-width="4.5" stroke-linecap="round"/>
+  <path d="M23 24h12" fill="none" stroke="#153b5e" stroke-width="4.5" stroke-linecap="round"/>
+  <circle cx="37" cy="24" r="3.5" fill="#287eb3"/>
+</svg>

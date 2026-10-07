@@ -6,7 +6,7 @@ import { fileURLToPath } from 'node:url';
 const root = dirname(fileURLToPath(import.meta.url));
 const types = { '.html': 'text/html', '.css': 'text/css', '.js': 'text/javascript', '.svg': 'image/svg+xml' };
 const publicFiles = new Set([
-  '/index.html', '/tickets.html', '/ticket-details.html', '/favicon.svg', '/css/style.css',
+  '/index.html', '/tickets.html', '/ticket-details.html', '/logo.svg', '/css/style.css',
   '/js/dashboard.js', '/js/detail.js', '/js/status.js', '/js/store.js',
   '/js/tickets.js', '/js/ui.js'
 ]);

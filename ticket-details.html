@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Ticket details · Campus IT Desk</title>
-  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="logo.svg" type="image/svg+xml">
   <link rel="stylesheet" href="css/style.css">
   <script type="module" src="js/detail.js"></script>
 </head>
@@ -12,22 +12,21 @@
   <a class="skip-link" href="#main-content">Skip to main content</a>
   <div class="app-shell">
     <aside class="sidebar">
-      <a class="brand" href="index.html"><span class="brand-mark" aria-hidden="true">IT</span><span>Campus IT<br><strong>Service desk</strong></span></a>
-      <nav class="main-nav" aria-label="Main navigation"><a href="index.html"><span aria-hidden="true">▦</span> Dashboard</a><a class="active" aria-current="page" href="tickets.html"><span aria-hidden="true">▤</span> Tickets</a></nav>
-      <div class="sidebar-bottom"><span class="sidebar-rule"></span><p>One place for campus technology requests.</p><small>Saved in this browser</small></div>
+      <a class="brand" href="index.html"><img class="brand-mark" src="logo.svg" alt=""><span><strong>Campus IT</strong><small>Service desk</small></span></a>
+      <nav class="main-nav" aria-label="Main navigation"><a href="index.html">Dashboard</a><a class="active" aria-current="page" href="tickets.html">Tickets</a></nav>
+      <p class="sidebar-bottom">Saved on this device</p>
     </aside>
     <main class="main-content" id="main-content">
-      <header class="topbar"><span>Ticket details</span><span class="preview-tag">Campus IT desk</span></header>
       <div class="page-content detail-page">
         <a class="back-link" href="tickets.html"><span aria-hidden="true">←</span> Back to tickets</a>
         <p class="page-error" id="page-error" role="alert" hidden></p>
         <div class="empty-state missing-ticket" id="missing-ticket" hidden>Ticket not found. <a href="tickets.html">Return to the ticket list</a>.</div>
         <div id="ticket-content" hidden>
-          <div class="page-heading detail-heading"><div><p class="eyebrow">Ticket · <span id="ticket-id"></span></p><h1 id="ticket-title"></h1><p class="intro">Reported by <span id="ticket-requester-summary"></span> on <span id="ticket-created-summary"></span></p></div><span class="status status-large" id="ticket-status"></span></div>
+          <div class="page-heading detail-heading"><div><h1 id="ticket-title"></h1><p class="intro">Submitted by <span id="ticket-requester-summary"></span> · <span id="ticket-created-summary"></span></p></div><span class="status status-large" id="ticket-status"></span></div>
           <div class="detail-grid">
             <div class="detail-main">
-              <section class="content-panel" aria-labelledby="issue-heading"><div class="section-heading compact"><h2 id="issue-heading">Issue details</h2></div><p class="issue-description" id="ticket-description"></p><dl class="facts-grid"><div><dt>Ticket number</dt><dd id="detail-id"></dd></div><div><dt>Requester</dt><dd id="detail-requester"></dd></div><div><dt>Category</dt><dd id="detail-category"></dd></div><div><dt>Priority</dt><dd><span class="badge" id="detail-priority"></span></dd></div><div><dt>Date created</dt><dd id="detail-created"></dd></div><div><dt>Date resolved</dt><dd id="detail-resolved"></dd></div><div><dt>Resolution time</dt><dd id="detail-days"></dd></div><div><dt>Assigned technician</dt><dd id="detail-technician"></dd></div></dl></section>
-              <section class="content-panel" aria-labelledby="notes-heading"><div class="section-heading compact"><div><h2 id="notes-heading">Notes</h2><p class="muted">Updates appear newest first.</p></div><span class="count-chip" id="note-count">0 notes</span></div><div id="notes"></div><p class="empty-state" id="notes-empty" hidden>No notes yet. Add an update for the next person working on this ticket.</p><form class="note-form" id="note-form"><h3>Add a note</h3><div class="form-grid"><label class="field">Your name<input type="text" name="author" maxlength="100" placeholder="Your name" required></label><label class="field field-full">Note<textarea name="text" rows="3" maxlength="2000" placeholder="Write an update for this ticket" required></textarea></label></div><p class="form-message" id="note-message" role="status" hidden></p><button class="button button-primary" type="submit">Add note</button></form></section>
+              <section class="content-panel" aria-labelledby="issue-heading"><div class="section-heading compact"><h2 id="issue-heading">Description</h2></div><p class="issue-description" id="ticket-description"></p><dl class="facts-grid"><div><dt>Category</dt><dd id="detail-category"></dd></div><div><dt>Priority</dt><dd><span class="badge" id="detail-priority"></span></dd></div><div><dt>Assigned technician</dt><dd id="detail-technician"></dd></div><div><dt>Date resolved</dt><dd id="detail-resolved"></dd></div><div><dt>Resolution time</dt><dd id="detail-days"></dd></div></dl></section>
+              <section class="content-panel" aria-labelledby="notes-heading"><div class="section-heading compact"><div class="heading-with-count"><h2 id="notes-heading">Notes</h2><span class="count-chip" id="note-count">0 notes</span></div><button class="button button-secondary" type="button" id="open-note-dialog">Add note</button></div><p class="form-message" id="note-success" role="status" hidden></p><div id="notes"></div><p class="empty-state" id="notes-empty" hidden>No notes yet.</p></section>
             </div>
             <div class="detail-side">
               <section class="content-panel" aria-labelledby="manage-heading"><div class="section-heading compact"><h2 id="manage-heading">Manage ticket</h2></div><form id="assignment-form"><label class="field">Assigned technician<select name="technician" id="technician"><option value="">Unassigned</option><option>Alex Rivera</option><option>Jordan Lee</option><option>Sam Torres</option></select></label><p class="form-message" id="assignment-message" role="status" hidden></p><button class="button button-secondary full-width" type="submit">Save assignment</button></form><div class="panel-divider"></div><form id="status-form"><label class="field">Change status<select name="status" id="new-status" required></select></label><p class="form-message" id="status-message" role="status" hidden></p><button class="button button-primary full-width" id="status-button" type="submit">Update status</button></form><p class="helper" id="status-help"></p></section>
@@ -38,5 +37,11 @@
       </div>
     </main>
   </div>
+  <dialog class="dialog" id="note-dialog" aria-labelledby="note-dialog-heading">
+    <div class="dialog-surface">
+      <div class="dialog-heading"><h2 id="note-dialog-heading" tabindex="-1">Add note</h2><button class="dialog-close" type="button" aria-label="Close add note" data-close-dialog></button></div>
+      <form id="note-form"><div class="form-grid"><label class="field">Your name<input type="text" name="author" maxlength="100" placeholder="Your name" required></label><label class="field field-full">Note<textarea name="text" rows="4" maxlength="2000" placeholder="Write an update for this ticket" required></textarea></label></div><p class="form-message" id="note-message" role="status" hidden></p><div class="dialog-actions"><button class="button button-secondary" type="button" data-close-dialog>Cancel</button><button class="button button-primary" type="submit">Add note</button></div></form>
+    </div>
+  </dialog>
 </body>
 </html>

@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Tickets · Campus IT Desk</title>
-  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="logo.svg" type="image/svg+xml">
   <link rel="stylesheet" href="css/style.css">
   <script type="module" src="js/tickets.js"></script>
 </head>
@@ -12,16 +12,15 @@
   <a class="skip-link" href="#main-content">Skip to main content</a>
   <div class="app-shell">
     <aside class="sidebar">
-      <a class="brand" href="index.html"><span class="brand-mark" aria-hidden="true">IT</span><span>Campus IT<br><strong>Service desk</strong></span></a>
-      <nav class="main-nav" aria-label="Main navigation"><a href="index.html"><span aria-hidden="true">▦</span> Dashboard</a><a class="active" aria-current="page" href="tickets.html"><span aria-hidden="true">▤</span> Tickets</a></nav>
-      <div class="sidebar-bottom"><span class="sidebar-rule"></span><p>One place for campus technology requests.</p><small>Saved in this browser</small></div>
+      <a class="brand" href="index.html"><img class="brand-mark" src="logo.svg" alt=""><span><strong>Campus IT</strong><small>Service desk</small></span></a>
+      <nav class="main-nav" aria-label="Main navigation"><a href="index.html">Dashboard</a><a class="active" aria-current="page" href="tickets.html">Tickets</a></nav>
+      <p class="sidebar-bottom">Saved on this device</p>
     </aside>
     <main class="main-content" id="main-content">
-      <header class="topbar"><span>Request management</span><span class="preview-tag">Campus IT desk</span></header>
       <div class="page-content">
-        <div class="page-heading"><div><p class="eyebrow">Campus support</p><h1>Tickets</h1><p class="intro">Find requests, check their urgency, and see who is assigned.</p></div><a class="button button-primary" href="#new-ticket">New ticket <span aria-hidden="true">+</span></a></div>
+        <div class="page-heading"><h1>Tickets</h1><button class="button button-primary" type="button" id="open-ticket-dialog">New ticket</button></div>
         <p class="page-error" id="page-error" role="alert" hidden></p>
-        <section class="filter-panel" aria-labelledby="filter-heading"><div class="section-heading compact"><h2 id="filter-heading">Find tickets</h2><button class="text-button" id="clear-filters" type="button">Clear filters</button></div><form class="filter-grid" id="filters">
+        <section class="filter-panel" aria-labelledby="filter-heading"><div class="section-heading compact"><h2 id="filter-heading">Filter tickets</h2><button class="text-button" id="clear-filters" type="button">Clear filters</button></div><form class="filter-grid" id="filters">
           <label class="field search-field">Description search<input type="search" name="description" placeholder="Search by description"></label>
           <label class="field">Status<select name="status"><option value="">All statuses</option><option>Open</option><option>In Progress</option><option>Resolved</option><option>Closed</option></select></label>
           <label class="field">Priority<select name="priority"><option value="">All priorities</option><option>Critical</option><option>High</option><option>Medium</option><option>Low</option></select></label>
@@ -29,16 +28,21 @@
           <label class="field">Technician<select name="technician"><option value="">All technicians</option><option value="unassigned">Unassigned</option><option>Alex Rivera</option><option>Jordan Lee</option><option>Sam Torres</option></select></label>
           <label class="field">Sort by<select name="sort"><option value="newest">Newest first</option><option value="priority">Priority: Critical first</option><option value="oldest">Oldest first</option></select></label>
         </form></section>
-        <section aria-labelledby="all-heading"><div class="section-heading"><h2 id="all-heading">All tickets <span class="count-chip" id="result-count" aria-live="polite">0 tickets</span></h2></div><div class="table-wrap"><table><caption class="visually-hidden">Tickets matching the current filters</caption><thead><tr><th scope="col">Ticket and description</th><th scope="col">Category</th><th scope="col">Priority</th><th scope="col">Status</th><th scope="col">Technician</th><th scope="col">Created</th></tr></thead><tbody id="ticket-rows"></tbody></table><p class="empty-state" id="tickets-empty" hidden>No tickets match. <a href="#new-ticket">Create a ticket</a> or clear the filters.</p></div></section>
-        <section class="form-panel" id="new-ticket" aria-labelledby="new-heading"><div class="section-heading compact"><div><h2 id="new-heading">Create a ticket</h2><p class="muted">New tickets start with Open status and receive a number automatically.</p></div></div><form id="ticket-form"><div class="form-grid">
-          <label class="field">Requester name<input type="text" name="requester" maxlength="100" placeholder="Your full name" required></label>
-          <label class="field">Category<select name="category" required><option value="">Choose a category</option><option>Hardware</option><option>Network</option><option>Software</option><option>Account</option></select></label>
-          <label class="field">Priority<select name="priority" required><option value="">Choose a priority</option><option>Low</option><option>Medium</option><option>High</option><option>Critical</option></select></label>
-          <label class="field">Assign technician <span class="optional">Optional</span><select name="technician"><option value="">Unassigned</option><option>Alex Rivera</option><option>Jordan Lee</option><option>Sam Torres</option></select></label>
-          <label class="field field-full">Description<textarea name="description" rows="4" maxlength="2000" placeholder="Describe the issue and where it happened" required></textarea></label>
-        </div><p class="form-message" id="form-message" role="status" hidden></p><button class="button button-primary" type="submit">Create ticket</button></form></section>
+        <section aria-labelledby="all-heading"><div class="section-heading"><h2 id="all-heading">All tickets <span class="count-chip" id="result-count" aria-live="polite">0 tickets</span></h2></div><div class="table-wrap"><table><caption class="visually-hidden">Tickets matching the current filters</caption><thead><tr><th scope="col">Ticket and description</th><th scope="col">Category</th><th scope="col">Priority</th><th scope="col">Status</th><th scope="col">Technician</th><th scope="col">Created</th></tr></thead><tbody id="ticket-rows"></tbody></table><p class="empty-state" id="tickets-empty" hidden><span id="tickets-empty-text">No tickets yet.</span> <button class="inline-action" type="button" data-open-ticket-dialog>Create a ticket</button>.</p></div></section>
       </div>
     </main>
   </div>
+  <dialog class="dialog" id="new-ticket-dialog" aria-labelledby="new-heading">
+    <div class="dialog-surface">
+      <div class="dialog-heading"><div><h2 id="new-heading" tabindex="-1">New ticket</h2><p>Starts as Open. The ticket number is assigned when saved.</p></div><button class="dialog-close" type="button" aria-label="Close new ticket" data-close-dialog></button></div>
+      <form id="ticket-form"><div class="form-grid">
+          <label class="field">Requester name<input type="text" name="requester" maxlength="100" placeholder="Your full name" required></label>
+          <label class="field">Category<select name="category" required><option value="">Choose a category</option><option>Hardware</option><option>Network</option><option>Software</option><option>Account</option></select></label>
+          <label class="field">Priority<select name="priority" required><option value="">Choose a priority</option><option>Low</option><option>Medium</option><option>High</option><option>Critical</option></select></label>
+          <label class="field"><span>Assign technician <span class="optional">Optional</span></span><select name="technician"><option value="">Unassigned</option><option>Alex Rivera</option><option>Jordan Lee</option><option>Sam Torres</option></select></label>
+          <label class="field field-full">Description<textarea name="description" rows="4" maxlength="2000" placeholder="Describe the issue and where it happened" required></textarea></label>
+      </div><p class="form-message" id="form-message" role="status" hidden></p><div class="dialog-actions"><button class="button button-secondary" type="button" data-close-dialog>Cancel</button><button class="button button-primary" type="submit">Create ticket</button></div></form>
+    </div>
+  </dialog>
 </body>
 </html>

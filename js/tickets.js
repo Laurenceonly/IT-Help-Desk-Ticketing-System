@@ -1,11 +1,16 @@
 import { createTicket, getTickets, selectTickets } from './store.js';
-import { clearMessage, element, formatDate, message, priorityBadge, statusLabel, ticketLink } from './ui.js';
+import { clearMessage, connectDialog, element, formatDate, message, priorityBadge, statusLabel, ticketLink } from './ui.js';
 
 const filters = document.querySelector('#filters');
 const form = document.querySelector('#ticket-form');
 const rows = document.querySelector('#ticket-rows');
 const empty = document.querySelector('#tickets-empty');
 const pageError = document.querySelector('#page-error');
+const ticketDialog = document.querySelector('#new-ticket-dialog');
+const openTicketDialog = connectDialog(ticketDialog, [
+  document.querySelector('#open-ticket-dialog'),
+  ...document.querySelectorAll('[data-open-ticket-dialog]')
+]);
 
 const query = new URLSearchParams(location.search);
 for (const field of ['status', 'priority', 'category', 'technician', 'sort']) {
@@ -17,10 +22,12 @@ for (const field of ['status', 'priority', 'category', 'technician', 'sort']) {
 function render() {
   try {
     clearMessage(pageError);
-    const selected = selectTickets(getTickets(), Object.fromEntries(new FormData(filters)));
+    const tickets = getTickets();
+    const selected = selectTickets(tickets, Object.fromEntries(new FormData(filters)));
     rows.replaceChildren();
     document.querySelector('#result-count').textContent = `${selected.length} ticket${selected.length === 1 ? '' : 's'}`;
     empty.hidden = selected.length > 0;
+    document.querySelector('#tickets-empty-text').textContent = tickets.length ? 'No tickets match these filters.' : 'No tickets yet.';
     for (const ticket of selected) {
       const row = element('tr');
       const cells = Array.from({ length: 6 }, () => element('td'));
@@ -55,4 +62,10 @@ form.addEventListener('submit', event => {
   } catch (error) { message(feedback, error.message, true); }
 });
 render();
+if (query.get('new') === '1') {
+  openTicketDialog();
+  const url = new URL(location.href);
+  url.searchParams.delete('new');
+  history.replaceState(null, '', url.pathname + url.search + url.hash);
+}
 window.addEventListener('storage', render);
