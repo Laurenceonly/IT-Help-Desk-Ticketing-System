@@ -1,0 +1,36 @@
+# Local editor and assistant files
+.agents/
+.claude/
+.codex/
+.cursor/
+.impeccable/
+.idea/
+.vscode/
+AGENTS.md
+SKILL.md
+skills/
+impeccable/
+.local-tools/
+.local/
+
+# Credentials and machine-specific settings
+.aws/
+.env
+.env.*
+.npmrc
+*.pem
+*.key
+*.pfx
+*.p12
+credentials.json
+service-account*.json
+
+# Dependencies and generated files
+node_modules/
+coverage/
+output/
+test-results/
+playwright-report/
+*.log
+.DS_Store
+Thumbs.db
