@@ -1,6 +1,6 @@
 # Campus IT Service Desk
 
-Campus IT Service Desk is a browser-based ticketing prototype built for the **IT Help Desk Ticketing System** exam scenario. It models how a campus IT office can turn reports from staff and students into numbered tickets, prioritize urgent issues, and track who owns each request through resolution and closure.
+I built Campus IT Service Desk as my exam submission for the **IT Help Desk Ticketing System** scenario. The browser-based prototype shows how a campus IT office can turn reports from staff and students into numbered tickets, prioritize urgent issues, and track who owns each request through resolution and closure.
 
 ![Campus IT Service Desk dashboard showing ticket counts, unassigned open tickets, and recent tickets](docs/dashboard.png)
 
